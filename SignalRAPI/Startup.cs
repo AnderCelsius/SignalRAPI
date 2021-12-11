@@ -29,8 +29,7 @@ namespace SignalRAPI
             services.AddDbContextAndConfigurations(Configuration);
             services.AddSingleton(Log.Logger);
 
-            services.ConfigureIdentity();
-
+            services.ConfigureIdentity(Configuration);
             services.AddDependencies();
             services.AddAutoMapper(typeof(Profiles));
 

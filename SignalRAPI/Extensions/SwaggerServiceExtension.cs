@@ -12,7 +12,7 @@ namespace SignalRAPI.Extensions
         {
             services.AddSwaggerGen(c =>
             {
-                c.IncludeXmlComments(string.Format(@"{0}\SamuraiLegend.WebApi.xml", Directory.GetCurrentDirectory()));
+                c.IncludeXmlComments(string.Format(@"{0}\SignalRAPI.xml", Directory.GetCurrentDirectory()));
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
