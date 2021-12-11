@@ -1,14 +1,24 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using SignalRAPI.Core.Interfaces;
+using SignalRAPI.Dtos.AuthenticationDtos;
 using SignalRAPI.Models;
+using SignalRAPI.Models.Settings;
+using SignalRAPI.Utilities;
+using SignalRAPI.Utilities.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
 using System.Linq;
+using System.Net;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace SignalRAPI.Core.Implementations
 {
@@ -58,81 +68,6 @@ namespace SignalRAPI.Core.Implementations
             return Response<LoginResponse>.Success($"{user.UserName} logged in succesfully", loginResponse);
         }
 
-        public async Task<Response<string>> Register(RegisterRequest model, string origin)
-        {
-            var user = _mapper.Map<AppUser>(model);
-            user.UserName = model.Email;
-
-            using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
-            {
-                _logger.Information($"{model.Email} created successfully");
-                await _userManager.AddToRoleAsync(user, Roles.Regular.ToString());
-
-                var emailResult = await SendVerificationEmail(user, origin);
-                if (emailResult)
-                {
-                    _logger.Information("Mail sent succesfully");
-                    transaction.Complete();
-                    return Response<string>.Success(user.Id, "User created successfully! Please check your mail to verify your account.");
-                }
-
-                _logger.Information("Mail service failed");
-                transaction.Dispose();
-                return Response<string>.Fail("Registration failed. Please try again.");
-            }
-
-            transaction.Complete();
-            return Response<string>.Fail(GetErrors(result));
-
-        }
-
-        public async Task<Response<string>> ConfirmEmailAsync(string userId, string code)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-            var result = await _userManager.ConfirmEmailAsync(user, code);
-            if (result.Succeeded)
-            {
-                return Response<string>.Success(user.Id, $"Account Confirmed for {user.Email}. You can now use the /api/Account/authenticate endpoint.");
-            }
-
-            return Response<string>.Fail($"An error occured while confirming {user.Email}.");
-
-        }
-
-        public async Task ForgotPassword(ForgotPasswordRequest model, string origin)
-        {
-            var account = await _userManager.FindByEmailAsync(model.Email);
-
-            // always return ok response to prevent email enumeration
-            if (account == null) return;
-
-            var code = await _userManager.GeneratePasswordResetTokenAsync(account);
-            var route = "api/account/reset-password/";
-            var _enpointUri = new Uri(string.Concat($"{origin}/", route));
-            var emailRequest = new EmailRequest()
-            {
-                Body = $"You reset token is - {code}",
-                ToEmail = model.Email,
-                Subject = "Reset Password",
-            };
-            await _emailService.SendEmailAsync(emailRequest);
-        }
-
-        public async Task<Response<string>> ResetPassword(ResetPasswordRequest model)
-        {
-            var account = await _userManager.FindByEmailAsync(model.Email);
-            if (account == null) return Response<string>.Fail($"No Accounts Registered with {model.Email}.");
-            var result = await _userManager.ResetPasswordAsync(account, model.Token, model.Password);
-            if (result.Succeeded)
-            {
-                return Response<string>.Success(model.Email, $"Your password reset was successful.");
-            }
-            return Response<string>.Fail($"Error occured while reseting the password.");
-
-        }
 
 
 
@@ -201,7 +136,7 @@ namespace SignalRAPI.Core.Implementations
                 roleClaims.Add(new Claim("roles", roles[i]));
             }
 
-            string ipAddress = IpHelper.GetIpAddress();
+            string ipAddress = Iphelper.GetIpAddress();
 
             var claims = new[]
             {
@@ -224,24 +159,6 @@ namespace SignalRAPI.Core.Implementations
                 expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
                 signingCredentials: signingCredentials);
             return jwtSecurityToken;
-        }
-        private async Task<bool> SendVerificationEmail(AppUser user, string origin)
-        {
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var route = "api/account/confirm-email/";
-            var _enpointUri = new Uri(string.Concat($"{origin}/", route));
-            var verificationUri = QueryHelpers.AddQueryString(_enpointUri.ToString(), "userId", user.Id);
-            verificationUri = QueryHelpers.AddQueryString(verificationUri, "code", code);
-            //Email Service Call Here
-            var mailRequest = new EmailRequest()
-            {
-                Subject = "Confirm Your Registration",
-                Body = $"Click {verificationUri} to complete your registration ",
-                ToEmail = user.Email
-            };
-
-            return await _emailService.SendEmailAsync(mailRequest);
         }
 
 

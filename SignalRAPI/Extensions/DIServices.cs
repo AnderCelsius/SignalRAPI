@@ -10,6 +10,8 @@ namespace SignalRAPI.Extensions
     {
         public static void AddDependencies(this IServiceCollection services)
         {
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IRequestFormService, RequestFormService>();
             services.AddScoped<IUserService, UserService>();

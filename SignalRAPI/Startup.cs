@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using SignalRAPI.Data;
 using SignalRAPI.Extensions;
+using SignalRAPI.Middlewares;
 using SignalRAPI.Models;
 using SignalRAPI.Utilities.AutoMapper;
 
@@ -33,11 +34,10 @@ namespace SignalRAPI
             services.AddDependencies();
             services.AddAutoMapper(typeof(Profiles));
 
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SignalRAPI", Version = "v1" });
-            });
+            services.AddControllers()
+                .AddNewtonsoftJson(op => op.SerializerSettings
+                    .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore); 
+            services.AddSwaggerExtension();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,10 +46,11 @@ namespace SignalRAPI
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SignalRAPI v1"));
+                app.UseDeveloperExceptionPage();                
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SignalRAPI v1"));
 
             Seeder.SeedData(context, userManager, roleManager).GetAwaiter().GetResult();
 
@@ -57,7 +58,9 @@ namespace SignalRAPI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
