@@ -18,6 +18,11 @@ namespace SignalRAPI.Data.Repositories.Implementations
             _db = _context.Set<T>();
         }
 
+        public void Attach(T entity)
+        {
+             _db.Attach(entity);
+        }
+
         public async Task Delete(int id)
         {
             var entity = await _db.FindAsync(id);

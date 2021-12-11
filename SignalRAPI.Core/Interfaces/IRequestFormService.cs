@@ -1,5 +1,6 @@
 ﻿using SignalRAPI.Dtos;
 using SignalRAPI.Dtos.RequestFormDtos;
+using SignalRAPI.Models;
 using SignalRAPI.Utilities;
 using SignalRAPI.Utilities.Pagination;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace SignalRAPI.Core.Interfaces
         Task<Response<PaginatorHelper<IEnumerable<RequestFormReadDto>>>> GetFormByStatus(PagingDto paging, string formStatus);
         Task<Response<bool>> ApproveRequestForm(int formId);
         Task<Response<RequestFormReadDto>> RejectRequestForm(int formId);
-        Task<Response<RequestFormReadDto>> CreateNewRequest(RequestFormCreateDto requestForm);
+        Task<Response<RequestFormReadDto>> CreateNewRequest(RequestFormCreateDto requestForm, string userId);
         Task<Response<bool>> DeleteRequestForm(string userId, int formId);
         Task<Response<bool>> UpdateRequestForm(int formId);
 

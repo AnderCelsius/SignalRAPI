@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace SignalRAPI.Core.Implementations
 {
@@ -20,13 +21,15 @@ namespace SignalRAPI.Core.Implementations
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly UserManager<AppUser> _userManager;
 
         public RequestFormService(IUnitOfWork unitOfWork, 
-            IMapper mapper, ILogger logger)
+            IMapper mapper, ILogger logger, UserManager<AppUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _userManager = userManager;
         }
         public async Task<Response<bool>> ApproveRequestForm(int formId)
         {
@@ -49,18 +52,30 @@ namespace SignalRAPI.Core.Implementations
             return Response<bool>.Success("Request approved successfully and forwarded to disburser", response);
         }
 
-        public async Task<Response<RequestFormReadDto>> CreateNewRequest(RequestFormCreateDto requestForm)
+        public async Task<Response<RequestFormReadDto>> CreateNewRequest(RequestFormCreateDto requestForm, string userId)
         {
             if(requestForm == null)
             {
                 return Response<RequestFormReadDto>.Fail($"Form cannot be null");
             }
 
+            var user = await _userManager.FindByEmailAsync(userId);
+            if (user == null)
+            {
+                return Response<RequestFormReadDto>.Fail($"User does not exist");
+            }
+
             var newRequestForm = _mapper.Map<RequestForm>(requestForm);
-            newRequestForm.FormStatus.Status = RequestFormStatus.NewRequest;
+
+            newRequestForm.FormStatus = new FormStatus()
+            {
+                Status = RequestFormStatus.NewRequest
+            };
+
+            newRequestForm.User = user;
 
             _logger.Information($"Attempting to add new form to database");
-            await _unitOfWork.RequestForms.Insert(newRequestForm);
+            _unitOfWork.RequestForms.Attach(newRequestForm);
             await _unitOfWork.Save();
             _logger.Information($"Form added to database");
 

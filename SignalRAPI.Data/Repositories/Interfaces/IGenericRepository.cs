@@ -17,6 +17,7 @@ namespace SignalRAPI.Data.Repositories.Interfaces
 
         Task<T> Get(Expression<Func<T, bool>> expression, List<string> includes = null);
         Task Insert(T entity);
+        void Attach(T entity);
         Task InsertRange(IEnumerable<T> entities);
         Task Delete(int id);
         void DeleteRange(IEnumerable<T> entities);

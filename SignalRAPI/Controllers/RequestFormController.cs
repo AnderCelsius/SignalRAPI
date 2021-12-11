@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SignalRAPI.Core.Interfaces;
 using SignalRAPI.Dtos;
@@ -6,6 +7,7 @@ using SignalRAPI.Dtos.RequestFormDtos;
 using SignalRAPI.Utilities;
 using SignalRAPI.Utilities.Pagination;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SignalRAPI.Controllers
@@ -60,13 +62,15 @@ namespace SignalRAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [Authorize(Roles = "Regular")]
         [HttpPost("create-new-request")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RequestFormReadDto>> CreateNewRequest([FromBody] RequestFormCreateDto formCreateDto)
         {
-            var result = await _requestFormService.CreateNewRequest(formCreateDto);
+            var userId = HttpContext.User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            var result = await _requestFormService.CreateNewRequest(formCreateDto, userId);
             return StatusCode(result.StatusCode, result);
         }
     }
