@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="2.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SignalRAPI.Data\SignalRAPI.Data.csproj" />
+    <ProjectReference Include="..\SignalRAPI.Dtos\SignalRAPI.Dtos.csproj" />
+    <ProjectReference Include="..\SignalRAPI.Utilities\SignalRAPI.Utilities.csproj" />
+  </ItemGroup>
+
+</Project>

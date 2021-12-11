@@ -1,0 +1,74 @@
+[
+  {
+    "id": "a84d25d7-a7ba-4b99-b757-8a52a25f61d5",
+    "FirstName": "Shekinah",
+    "LastName": "Okoye",
+    "Email": "shekinahokoye@gmail.com",
+    "CreatedAt": "10/19/2020",
+    "UpdatedAt": "4/26/2021"
+  },
+  {
+    "id": "d7638183-f0a4-4188-9fa1-517ee2c2dbdf",
+    "FirstName": "John",
+    "LastName": "Kehinde",
+    "Email": "johnkehinde@gmail.com",
+    "CreatedAt": "1/24/2021",
+    "UpdatedAt": "4/26/2021"
+  },
+  {
+    "id": "59d2d94c-79bf-4aaa-825e-d84a6b80e168",
+    "FirstName": "Omowunmi",
+    "LastName": "Kassim",
+    "Email": "wunmikay@gmail.com",
+    "CreatedAt": "1/24/2021",
+    "UpdatedAt": "4/26/2021"
+  },
+  {
+    "id": "922daede-c5ba-48c2-84c4-8b58aae2ddc5",
+    "FirstName": "Agnes",
+    "LastName": "Ugochukwu",
+    "Email": "agi@gmail.com",
+    "CreatedAt": "1/24/2021",
+    "UpdatedAt": "4/26/2021"
+  },
+  {
+    "id": "d296434c-13bc-4f44-a8d7-4426bf0cbd56",
+    "FirstName": "Osinachi",
+    "LastName": "Amala",
+    "Email": "osinachi@gmail.com",
+    "CreatedAt": "1/24/2021",
+    "UpdatedAt": "4/26/2021"
+  },
+  {
+    "id": "810042ea-ac3c-48c0-a7a2-8a94a192aaea",
+    "FirstName": "Julius",
+    "LastName": "Akpong",
+    "Email": "unclejay@gmail.com",
+    "CreatedAt": "1/24/2021",
+    "UpdatedAt": "4/26/2021"
+  },
+  {
+    "id": "d9b0dfd2-6c4b-47f3-ae3d-1d6cea4ad365",
+    "FirstName": "Mikael",
+    "LastName": "Pabel",
+    "Email": "mikael@gmail.com",
+    "CreatedAt": "1/24/2021",
+    "UpdatedAt": "4/26/2021"
+  },
+  {
+    "id": "ba4a08e2-62dc-4bfb-bfc9-972ce952102e",
+    "FirstName": "Paul",
+    "LastName": "Smith",
+    "Email": "paul@gmail.com",
+    "CreatedAt": "1/24/2021",
+    "UpdatedAt": "4/26/2021"
+  },
+  {
+    "id": "d60e65f7-738d-42d8-a960-fccaced0e4a4",
+    "FirstName": "Hope",
+    "LastName": "Alfred",
+    "Email": "hopealfred@gmail.com",
+    "CreatedAt": "1/24/2021",
+    "UpdatedAt": "4/26/2021"
+  }
+]

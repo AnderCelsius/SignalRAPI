@@ -1,0 +1,35 @@
+[
+  {
+    "UserId": "ba4a08e2-62dc-4bfb-bfc9-972ce952102e",
+    "Description": "Printer ink refill",
+    "Amount": 4500.00,
+    "DateCreated": "10/9/2021 3:01:24 PM",
+    "PaidBy": "Agnes Ugochukwu",
+    "CompanyId": 1,
+    "FundedAccount": "0076480620",
+    "ApprovedBy": "Shekinah Okoye",
+    "FormStatusId": 2
+  },
+  {
+    "UserId": "d60e65f7-738d-42d8-a960-fccaced0e4a4",
+    "Description": "Purchase of food for refreshment during CSR",
+    "Amount": 55500.50,
+    "DateCreated": "10/9/2021 3:01:24 PM",
+    "PaidBy": "Omowunmi Kassim",
+    "CompanyId": 1,
+    "FundedAccount": "0076480620",
+    "ApprovedBy": "Shekinah Okoye",
+    "FormStatusId": 3
+  },
+  {
+    "UserId": "d9b0dfd2-6c4b-47f3-ae3d-1d6cea4ad365",
+    "Description": "Petrol",
+    "Amount": 30000,
+    "DateCreated": "10/9/2021 3:01:24 PM",
+    "PaidBy": null,
+    "CompanyId": 1,
+    "FundedAccount": "0076480620",
+    "ApprovedBy": null,
+    "FormStatusId": 4
+  }
+]
